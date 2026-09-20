@@ -7,7 +7,7 @@ const state = {
     {id:"P001", sku:"AA-ISUZU-40G", name:"五十铃", weight:"40g", qty:1, expiry:"2027-01-31", price:300, cost:188, discount:"正价", alert:"低库存"},
     {id:"P002", sku:"AA-AOARASHI-40G", name:"青岚", weight:"40g", qty:5, expiry:"2027-02-08", price:240, cost:142, discount:"9折", alert:"90天内"},
     {id:"P003", sku:"AA-WAKATAKE-40G", name:"若竹", weight:"40g", qty:4, expiry:"2027-04-28", price:260, cost:150, discount:"正价", alert:"正常"},
-    {id:"P004", sku:"AA-ISUZU-100G", name:"五十铃", weight:"100g", qty:0, expiry:"—", price:680, cost:440, discount:"正价", alert:"查后可预售"}
+    {id:"P004", sku:"AA-ISUZU-100G", name:"五十铃", weight:"100g", qty:0, expiry:"—", price:680, cost:440, discount:"正价", alert:"可预售 · 1–2周"}
   ]
 };
 
@@ -61,7 +61,7 @@ function ownerDashboard(){ return `
       <div class="timeline">
         <div class="timeline-item"><strong>五十铃 40g 库存仅剩 1 罐</strong><span>仅提醒老板 · 刚刚</span></div>
         <div class="timeline-item"><strong>青岚 40g 进入 90 天折扣期</strong><span>负责人需放置 9 折标签</span></div>
-        <div class="timeline-item"><strong>预售订单 PO-0918-03 已付款</strong><span>需要准备订货 · 预计 7–14 天</span></div>
+        <div class="timeline-item"><strong>预售订单 PO-0918-03 已付款</strong><span>需要准备订货 · 预计 1–2 周</span></div>
       </div>
     </section>
   </div>
@@ -113,7 +113,7 @@ function inventory(){ return `
 function products(){ return `
   <div class="toolbar"><button class="button dark" data-action="new-product">+ 新增产品</button><button class="button secondary" data-nav="preorderAvailability">预售设置</button></div>
   <div class="card table-wrap"><table><thead><tr><th>产品</th><th>SKU</th><th>规格</th><th>默认售价</th><th>默认采购成本</th><th>预售</th><th></th></tr></thead><tbody>
-  ${state.products.map((p,i)=>`<tr><td><strong>${p.name}</strong></td><td>${p.sku}</td><td>${p.weight}</td><td>${money(p.price)}</td><td>${money(p.cost)}</td><td>${i===3?"7–14天":"可切换"}</td><td><button class="button small secondary" data-nav="productDetail">编辑</button></td></tr>`).join("")}
+  ${state.products.map((p,i)=>`<tr><td><strong>${p.name}</strong></td><td>${p.sku}</td><td>${p.weight}</td><td>${money(p.price)}</td><td>${money(p.cost)}</td><td>${i===3?"可预售 · 1–2周":"可设置"}</td><td><button class="button small secondary" data-nav="productDetail">编辑</button></td></tr>`).join("")}
   </tbody></table></div>
   <p class="subtle">新批次会默认带出上一次采购成本和售价；本次运费单独填写并分摊。修改后只影响新批次，不改写历史。</p>`; }
 
@@ -122,7 +122,7 @@ function productDetail(){ return `
     <section class="card"><h2>五十铃 40g</h2><p class="subtle">AA-ISUZU-40G</p><div class="form-grid">
       <div class="field"><label>品牌</label><input value="丸久小山园"></div><div class="field"><label>规格</label><input value="40g"></div>
       <div class="field"><label>默认采购成本</label><input value="188.00"></div><div class="field"><label>默认售价</label><input value="320.00"></div>
-      <div class="field full"><label>负责人查询时显示</label><select><option>可预售 7–14天</option><option>可预售 14–21天</option><option>暂时缺货</option><option>咨询老板</option></select></div>
+      <div class="field full"><label>负责人查询时显示</label><select><option>可预售 · 1–2周</option><option>可预售 · 2–3周</option><option>暂时缺货</option></select></div>
     </div><div class="summary-bar"><button class="button dark" data-action="save">保存</button><button class="button secondary" data-nav="products">返回</button></div></section>
     <section class="card"><h2>价格与批次</h2><div class="timeline">
       <div class="timeline-item"><strong>2027-01-31 · MOP 300</strong><span>剩余 1 罐 · 到货成本 MOP 184（含运费 4）</span></div>
@@ -172,13 +172,13 @@ function taskDetail(){ return `
   <section class="card"><h2>规则说明</h2><p>临期产品不参加正价商品两件或以上 95 折。标签只放在产品旁边，罐身原价贴纸无需更换。</p><div class="notice">如果任务未完成，系统会在 24 小时后再提醒一次，之后不持续轰炸。</div></section></div>`; }
 
 function preorderAvailability(){ return `
-  <div class="notice info"><strong>所有产品都必须先查再收款。</strong> 只有这里显示“可预售”时，负责人才能在 POS 选择对应的 AA-PRE- 商品并收全款。</div>
-  <div class="section-head"><div><h2>当前预售状态</h2><p>没有任何产品会自动放行。40g、100g 也必须先查询；1kg 默认咨询老板。</p></div></div>
+  <div class="notice info"><strong>所有产品都不自动预售，必须先查再收款。</strong> 只有这里显示“可预售”时，负责人才能在 POS 选择对应的 AA-PRE- 商品并收全款；显示“暂时缺货”时不可下单。</div>
+  <div class="section-head"><div><h2>当前预售状态</h2><p>每种产品只有“可预售”或“暂时缺货”两种状态；可预售时明确显示预计 1–2 周或 2–3 周到货。</p></div></div>
   <div class="list">
-    <div class="list-row"><div class="product-name"><strong>五十铃 40g</strong><span>AA-PRE-ISUZU-40G</span></div><div><span class="status">可预售</span></div><div><strong>7–14天</strong></div><div><strong>MOP 320</strong></div><button class="button small secondary" data-action="copy-sku">复制SKU</button></div>
-    <div class="list-row"><div class="product-name"><strong>青岚 40g</strong><span>AA-PRE-AOARASHI-40G</span></div><div><span class="status warning">可预售</span></div><div><strong>14–21天</strong></div><div><strong>MOP 240</strong></div><button class="button small secondary" data-action="copy-sku">复制SKU</button></div>
+    <div class="list-row"><div class="product-name"><strong>五十铃 40g</strong><span>AA-PRE-ISUZU-40G</span></div><div><span class="status">可预售</span></div><div><strong>1–2周</strong></div><div><strong>MOP 320</strong></div><button class="button small secondary" data-action="copy-sku">复制SKU</button></div>
+    <div class="list-row"><div class="product-name"><strong>青岚 40g</strong><span>AA-PRE-AOARASHI-40G</span></div><div><span class="status warning">可预售</span></div><div><strong>2–3周</strong></div><div><strong>MOP 240</strong></div><button class="button small secondary" data-action="copy-sku">复制SKU</button></div>
     <div class="list-row is-danger"><div class="product-name"><strong>若竹 100g</strong><span>AA-PRE-WAKATAKE-100G</span></div><div><span class="status danger">暂时缺货</span></div><div><strong>不可收款</strong></div><div>—</div><button class="button small secondary" disabled>暂停</button></div>
-    <div class="list-row"><div class="product-name"><strong>五十铃 1kg</strong><span>不设常规预售SKU</span></div><div><span class="status blue">咨询老板</span></div><div><strong>确认后才可下单</strong></div><div>—</div><button class="button small secondary" data-action="contact-owner">联系</button></div>
+    <div class="list-row is-danger"><div class="product-name"><strong>五十铃 1kg</strong><span>AA-PRE-ISUZU-1KG</span></div><div><span class="status danger">暂时缺货</span></div><div><strong>不可收款</strong></div><div>—</div><button class="button small secondary" disabled>暂停</button></div>
   </div>`; }
 
 function preorders(){ return `
@@ -186,8 +186,8 @@ function preorders(){ return `
   <div class="grid cols-4"><div class="metric"><span>已付款待订货</span><strong>2</strong></div><div class="metric"><span>订货中</span><strong>3</strong></div><div class="metric"><span>已到店待通知</span><strong>1</strong></div><div class="metric"><span>待取货</span><strong>2</strong></div></div>
   <div class="section-head"><div><h2>预售订单</h2><p>负责人查询确认后建立的 POS 预售不扣现货库存；到货后建立预售专用库存并绑定订单。</p></div></div>
   <div class="list">
-    <div class="list-row"><div class="product-name"><strong>PO-0918-03 · 五十铃 40g</strong><span>POS #8290 · 已收全款 MOP 320</span></div><div><span class="cell-label">顾客</span><strong>陈小姐</strong></div><div><span class="cell-label">预计</span><strong>7–14天</strong></div><div><span class="status blue">已到店</span></div><button class="button small dark" data-nav="preorderDetail">查看</button></div>
-    <div class="list-row"><div class="product-name"><strong>PO-0919-01 · 青岚 40g</strong><span>POS #8297 · 已收全款 MOP 240</span></div><div><span class="cell-label">顾客</span><strong>未填</strong></div><div><span class="cell-label">预计</span><strong>14–21天</strong></div><div><span class="status warning">待补联系方式</span></div><button class="button small dark" data-nav="preorderDetail">补充</button></div>
+    <div class="list-row"><div class="product-name"><strong>PO-0918-03 · 五十铃 40g</strong><span>POS #8290 · 已收全款 MOP 320</span></div><div><span class="cell-label">顾客</span><strong>陈小姐</strong></div><div><span class="cell-label">预计</span><strong>1–2周</strong></div><div><span class="status blue">已到店</span></div><button class="button small dark" data-nav="preorderDetail">查看</button></div>
+    <div class="list-row"><div class="product-name"><strong>PO-0919-01 · 青岚 40g</strong><span>POS #8297 · 已收全款 MOP 240</span></div><div><span class="cell-label">顾客</span><strong>未填</strong></div><div><span class="cell-label">预计</span><strong>2–3周</strong></div><div><span class="status warning">待补联系方式</span></div><button class="button small dark" data-nav="preorderDetail">补充</button></div>
   </div>`; }
 
 function preorderDetail(){ return `
@@ -296,7 +296,7 @@ document.addEventListener("click", e=>{
   if(action==="send-webhook"){ state.webhookCount++; toast("模拟事件已处理：五十铃 40g 库存扣减 1；重复事件将被忽略"); render(); return; }
   const messages={
     "submit-stockin":"送货单已发给负责人确认，确认前不计入在店库存", "save":"产品设置已保存", "mark-defect":"已打开包装瑕疵数量登记",
-    "complete-task":"任务已完成并记录处理时间", "copy-sku":"预售 SKU 已复制", "contact-owner":"已生成咨询老板的微信消息",
+    "complete-task":"任务已完成并记录处理时间", "copy-sku":"预售 SKU 已复制",
     "customer-notified":"已记录通知时间", "picked-up":"订单已标记为顾客取货", "confirm-stocktake":"请先完成所有勾选；确认后会生成差异流水",
     "download-statement":"结算单 PDF 已生成", "copy-phone":"MPay 注册手机号已复制", "mark-paid":"已标记转账并通知老板确认收款",
     "export":"导出文件已生成", "download-report":"年度报表 PDF 已生成", "mark-read":"已记录阅读确认", "publish-announcement":"公告已发布",
