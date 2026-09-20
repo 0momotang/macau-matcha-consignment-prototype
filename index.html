@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>澳门抹茶寄售管理小程序原型</title>
+  <meta name="description" content="库存、批次、折扣、预售、盘点、月结与MPay付款的完整微信小程序交互原型。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23143b2c'/%3E%3Ccircle cx='32' cy='33' r='17' fill='%23d6f15b'/%3E%3Cpath d='M19 27h26l-3 18H22z' fill='%23143b2c'/%3E%3Cpath d='M24 22h16' stroke='%23d6f15b' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="页面导航">
+      <div class="brand">
+        <div class="brand-mark">抹</div>
+        <div><strong>寄售管理</strong><span>交互原型 v1.0</span></div>
+      </div>
+      <div class="role-switch" role="group" aria-label="切换角色">
+        <button class="role-button is-active" data-role="owner">老板端</button>
+        <button class="role-button" data-role="manager">负责人端</button>
+      </div>
+      <nav id="nav"></nav>
+      <div class="prototype-note">本原型使用模拟数据。POS 暂按模拟 Webhook 与手动备用模式展示。</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="role-label">老板端</p>
+          <h1 id="page-title">总览</h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" data-nav="tasks" aria-label="查看任务">待办 <span class="badge">3</span></button>
+          <button class="avatar" data-action="profile" aria-label="账户设置">L</button>
+        </div>
+      </header>
+      <section id="screen" class="screen" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" id="bottom-nav" aria-label="移动端导航"></nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
